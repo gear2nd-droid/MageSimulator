@@ -15,6 +15,12 @@ MAGE Simulatorは、コマンドラインアプリです。
 計算にCUDAを使用し、描画にopenGLを使用しています。
 なお、並列計算を実行している際は、openGLでの描画はできないようになっています。
 
+## コマンド
+MAGE Simulatorは3個の引数を順番に渡す必要があります。
+1. machine.xml(3Dプリンタの各種緒言・運動学などが定義されたファイル)のパス
+2. 衝突検出の有無:True/False
+3. マルチスレッド:True/False
+
 # 開発環境
 + Visual Studio Community 2022 (17.10.5)
 
@@ -25,9 +31,3 @@ MAGE Simulatorは、コマンドラインアプリです。
 ## 環境設定方法
 openGLは、NuGetでインストールすることができます。
 CUDAは、NVIDIAの資料を参照しインストールしてください。
-
-## コマンド
-MAGE Simulatorは3個の引数を順番に渡す必要があります。
-1. machine.xml(3Dプリンタの各種緒言・運動学などが定義されたファイル)のパス
-2. 衝突検出の有無:True/False
-3. マルチスレッド:True/False
