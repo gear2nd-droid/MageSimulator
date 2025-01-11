@@ -40,6 +40,7 @@ MAGE Simulatorは、コマンドラインアプリです。
 - OriginX:原点のX座標
 - OriginY:原点のY座標
 - OriginZ:原点のZ座標
+- HoppingDistance:移動量がこの値よりも大きいとZホップする
 
 ### Headsタグ
 ノズルを含めたヘッドの構成要素を定義します。
