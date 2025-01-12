@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{5b866863-6699-4134-af22-c461bea3ec5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{872587be-e896-48d7-8318-efd86c2eb7d5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="kernel.cu">
+      <Filter>src</Filter>
+    </CudaCompile>
+    <CudaCompile Include="ToolPath.cu">
+      <Filter>src</Filter>
+    </CudaCompile>
+    <CudaCompile Include="PrintObject.cu">
+      <Filter>src</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Utility.cu">
+      <Filter>src</Filter>
+    </CudaCompile>
+    <CudaCompile Include="MachineObject.cu">
+      <Filter>src</Filter>
+    </CudaCompile>
+    <CudaCompile Include="CollisionCheck.cu">
+      <Filter>src</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Kinematics.cu">
+      <Filter>src</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SimpleGL.cu">
+      <Filter>src</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ToolPath.cuh">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintObject.cuh">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.cuh">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="MachineObject.cuh">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionCheck.cuh">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs.cuh">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="Kinematics.cuh">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleGL.cuh">
+      <Filter>header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
