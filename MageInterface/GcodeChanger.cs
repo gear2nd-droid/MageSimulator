@@ -146,8 +146,8 @@ namespace MageInterface
         string[] gcd = {"" };
         if(
           Math.Abs(vn_gcd[3] - vp_gcd[3]) > Math.Abs(vp_gcd[3]) ||
-          Math.Abs(vn_gcd[3] - vp_gcd[4]) > Math.Abs(vp_gcd[4]) ||
-          Math.Abs(vn_gcd[3] - vp_gcd[5]) > Math.Abs(vp_gcd[5]) ||
+          Math.Abs(vn_gcd[4] - vp_gcd[4]) > Math.Abs(vp_gcd[4]) ||
+          Math.Abs(vn_gcd[5] - vp_gcd[5]) > Math.Abs(vp_gcd[5]) ||
           Math.Abs(rn_xyz[0] - rp_xyz[0]) > this.kin.HoppingDistance ||
           Math.Abs(rn_xyz[1] - rp_xyz[1]) > this.kin.HoppingDistance ||
           Math.Abs(rn_xyz[2] - rp_xyz[2]) > this.kin.HoppingDistance 
