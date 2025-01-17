@@ -85,7 +85,25 @@ std::vector<GcodeItem> readGcode(char* filename)
 		gcode.f = preF;
 		gcode.s = preS;
 		gcode.lineIdx = lineIdx;
-		if (!std::regex_search(line, m, std::regex(";MACRO")))
+		bool readFlag = true;
+		if(std::regex_search(line, m, std::regex(";(MACRO)")))
+		{
+			readFlag = false;
+		}
+		else if (std::regex_search(line, m, std::regex("PRINT_START")))
+		{
+			readFlag = false;
+		}
+		else if(std::regex_search(line, m, std::regex("PRINT_END")))
+		{
+			readFlag = false;
+		}
+		else if(std::regex_search(line, m, std::regex("SET_FAN_SPEED")))
+		{
+			readFlag = false;
+		}
+
+		if (readFlag)
 		{
 			if (std::regex_search(line, m, std::regex(";([0-9a-zA-Z-.\s_,:=]*)")))
 			{

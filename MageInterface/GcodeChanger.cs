@@ -69,7 +69,9 @@ namespace MageInterface
       FileStream infile = new FileStream(this.inputFile, FileMode.Open);
       StreamReader reader = new StreamReader(infile, Encoding.GetEncoding("UTF-8"));
       FileStream outfile = new FileStream(this.outputFile, FileMode.Create);
-      StreamWriter writer = new StreamWriter(outfile, Encoding.GetEncoding("UTF-8"));
+      UTF8Encoding encoding = new UTF8Encoding(false);
+      //StreamWriter writer = new StreamWriter(outfile, Encoding.GetEncoding("UTF-8"));
+      StreamWriter writer = new StreamWriter(outfile, encoding);
 
       // init values
       double pd = 0.0;
@@ -84,10 +86,10 @@ namespace MageInterface
       double pe = 0.0;
       double[] vp_gcd = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-      string startGcd = string.Format("PRINT_START BED_TEMP={0:F2} EXTRUDER_TEMP={1:F2} ;MACRO",
+      string startGcd = string.Format("PRINT_START BED_TEMP={0:F2} EXTRUDER_TEMP={1:F2} ;(MACRO)",
         this.bed, this.nozzle);
       writer.WriteLine(startGcd);
-      string fanGcd = string.Format("SET_FAN_SPEED FAN=fan SPEED={0:F3} ;MACRO", this.fanFirst / 100.0);
+      string fanGcd = string.Format("SET_FAN_SPEED FAN=fan SPEED={0:F3} ;(MACRO)", this.fanFirst / 100.0);
       writer.WriteLine(fanGcd);
 
       // read
@@ -137,7 +139,7 @@ namespace MageInterface
           writer.WriteLine(text);
           if(pre_block == 0 && pre_layer == 0)
           {
-            string bufGcd = string.Format("SET_FAN_SPEED FAN=fan SPEED={0:F3} ;MACRO", this.fanSecond / 100.0);
+            string bufGcd = string.Format("SET_FAN_SPEED FAN=fan SPEED={0:F3} ;(MACRO)", this.fanSecond / 100.0);
             writer.WriteLine(bufGcd);
           }
         }
@@ -292,7 +294,7 @@ namespace MageInterface
         pre_curve = curve;
       }
 
-      string endGcd = string.Format("PRINT_END ;MACRO");
+      string endGcd = string.Format("PRINT_END ;(MACRO)");
       writer.WriteLine(endGcd);
 
       writer.Close();
