@@ -9,8 +9,7 @@ namespace MageInterface.Kinematics
   class KinTrunnionBC : Kinematics
   {
     override public void InverseKinematics(double[] tar_xyz, double[] tar_ijk,
-      double[] pre_gcd, double[] pre_ijk,
-      out double[] next)
+      double[] pre_gcd, out double[] next)
     {
       next = new double[6];
       double pre_tilt = pre_gcd[4];
@@ -50,6 +49,49 @@ namespace MageInterface.Kinematics
       double buf_1 = (buf_base - 1) * Math.PI * 2.0 + rot;
       double buf_2 = buf_base * Math.PI * 2.0 + rot;
       double buf_3 = (buf_base + 1) * Math.PI * 2.0 + rot;
+      double dist_1 = Math.Abs(buf_1 - pre_rot);
+      double dist_2 = Math.Abs(buf_2 - pre_rot);
+      double dist_3 = Math.Abs(buf_3 - pre_rot);
+      if (dist_1 <= dist_2 && dist_1 <= dist_3)
+      {
+        rot = buf_1;
+      }
+      else if (dist_2 <= dist_1 && dist_2 <= dist_3)
+      {
+        rot = buf_2;
+      }
+      else
+      {
+        rot = buf_3;
+      }
+
+      // pos
+      double bx1 = Math.Cos(rot) * tar_xyz[0] - Math.Sin(rot) * tar_xyz[1];
+      double by1 = Math.Sin(rot) * tar_xyz[0] + Math.Cos(rot) * tar_xyz[1];
+      double bz1 = tar_xyz[2];
+      double bx2 = Math.Cos(-tilt) * bx1 - Math.Sin(-tilt) * bz1;
+      double by2 = by1;
+      double bz2 = Math.Sin(-tilt) * bx1 + Math.Cos(-tilt) * bz1;
+      next[0] = bx2;
+      next[1] = by2;
+      next[2] = bz2;
+      next[3] = 0.0;
+      next[4] = tilt;
+      next[5] = rot;
+    }
+
+    override public void InverseKinematicsWithABC(double[] tar_xyz, double tar_a, double tar_b, double tar_c,
+      double[] pre_gcd, out double[] next)
+    {
+      next = new double[6];
+      double pre_tilt = pre_gcd[4];
+      double pre_rot = pre_gcd[5];
+      double tilt = tar_b;
+      double rot = tar_c;
+      int buf_base = (int)Math.Ceiling(pre_rot / Math.PI / 2.0);
+      double buf_1 = (buf_base - 1) * Math.PI * 2.0 + rot - buf_base * Math.PI * 2.0;
+      double buf_2 = buf_base * Math.PI * 2.0 + rot - buf_base * Math.PI * 2.0;
+      double buf_3 = (buf_base + 1) * Math.PI * 2.0 + rot - buf_base * Math.PI * 2.0;
       double dist_1 = Math.Abs(buf_1 - pre_rot);
       double dist_2 = Math.Abs(buf_2 - pre_rot);
       double dist_3 = Math.Abs(buf_3 - pre_rot);

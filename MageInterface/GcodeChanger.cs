@@ -121,7 +121,7 @@ namespace MageInterface
         double[] rn_xyz = {rnx, rny, rnz };
         double[] rn_ijk = {rni, rnj, rnk };
         double[] vn_gcd;
-        this.kin.InverseKinematics(rn_xyz, rn_ijk, vp_gcd, rp_ijk, out vn_gcd);
+        this.kin.InverseKinematics(rn_xyz, rn_ijk, vp_gcd, out vn_gcd);
 
         // calc distance
         double dist = Math.Sqrt((rn_xyz[0] - rp_xyz[0]) * (rn_xyz[0] - rp_xyz[0])
@@ -147,24 +147,132 @@ namespace MageInterface
         // output gcode
         string[] gcd = {"" };
         if(
-          Math.Abs(vn_gcd[3] - vp_gcd[3]) > Math.Abs(vp_gcd[3]) ||
-          Math.Abs(vn_gcd[4] - vp_gcd[4]) > Math.Abs(vp_gcd[4]) ||
-          Math.Abs(vn_gcd[5] - vp_gcd[5]) > Math.Abs(vp_gcd[5]) ||
+          //Math.Abs(vn_gcd[3] - vp_gcd[3]) > Math.Abs(vp_gcd[3]) ||
+          //Math.Abs(vn_gcd[4] - vp_gcd[4]) > Math.Abs(vp_gcd[4]) ||
+          //Math.Abs(vn_gcd[5] - vp_gcd[5]) > Math.Abs(vp_gcd[5]) ||
+          Math.Abs(vn_gcd[3] - vp_gcd[3]) > this.kin.HoppingDegreeA / 180.0 * Math.PI ||
+          Math.Abs(vn_gcd[4] - vp_gcd[4]) > this.kin.HoppingDegreeB / 180.0 * Math.PI ||
+          Math.Abs(vn_gcd[5] - vp_gcd[5]) > this.kin.HoppingDegreeC / 180.0 * Math.PI ||
           Math.Abs(rn_xyz[0] - rp_xyz[0]) > this.kin.HoppingDistance ||
           Math.Abs(rn_xyz[1] - rp_xyz[1]) > this.kin.HoppingDistance ||
           Math.Abs(rn_xyz[2] - rp_xyz[2]) > this.kin.HoppingDistance 
           )
         {
+          double[] buf_gcd;
+          string[] add_gcd = {"" };
+          this.kin.InverseKinematicsWithABC(rp_xyz, vn_gcd[3], vn_gcd[4], vn_gcd[5], vp_gcd, out buf_gcd);
           if(block == 0 && layer == 0)
           {
-            gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+            gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
               this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
+            switch(rnm)
+            {
+	            case 11://OuterWallMiddle = 11,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
+                break;
+	            case 12://OuterWallStart = 12,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
+                break;
+	            case 13://OuterWallEnd = 13,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
+                break;
+	            case 21://InnerWallMiddle = 21,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
+                break;
+	            case 22://InnerWallStart = 22,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
+                break;
+	            case 23://InnerWallEnd = 23,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
+                break;
+	            case 31://InfillMiddle = 31,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillFirst, out pe);
+                break;
+	            case 32://InfillStart = 32,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillFirst, out pe);
+                break;
+	            case 33://InfillEnd = 33,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillFirst, out pe);
+                break;
+	            case 41://SupportMiddle = 41,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportFirst, out pe);
+                break;
+	            case 42://SupportStart = 42,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportFirst, out pe);
+                break;
+	            case 43://SupportEnd = 43,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportFirst, out pe);
+                break;
+	            case 51://Saving = 51,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.moveFirst, out pe);
+                break;
+	            case 0://None = 0
+                break;
+              default:
+                break;
+            }
           }
           else
           {
-            gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+            gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
               this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
+            switch(rnm)
+            {
+	            case 11://OuterWallMiddle = 11,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
+                break;
+	            case 12://OuterWallStart = 12,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
+                break;
+	            case 13://OuterWallEnd = 13,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
+                break;
+	            case 21://InnerWallMiddle = 21,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
+                break;
+	            case 22://InnerWallStart = 22,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
+                break;
+	            case 23://InnerWallEnd = 23,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
+                break;
+	            case 31://InfillMiddle = 31,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillSecond, out pe);
+                break;
+	            case 32://InfillStart = 32,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillSecond, out pe);
+                break;
+	            case 33://InfillEnd = 33,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillSecond, out pe);
+                break;
+	            case 41://SupportMiddle = 41,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportSecond, out pe);
+                break;
+	            case 42://SupportStart = 42,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportSecond, out pe);
+                break;
+	            case 43://SupportEnd = 43,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportSecond, out pe);
+                break;
+	            case 51://Saving = 51,
+                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.moveSecond, out pe);
+                break;
+	            case 0://None = 0
+                break;
+              default:
+                break;
+            }
           }
+          List<string> out_gcd = new List<string>();
+          for(int g = 0; g < gcd.Length; g++)
+          {
+            out_gcd.Add(gcd[g]);
+          }
+          for(int g = 0; g < add_gcd.Length; g++)
+          {
+            out_gcd.Add(add_gcd[g]);
+          }
+          gcd = out_gcd.ToArray();
         }
         else
         {
