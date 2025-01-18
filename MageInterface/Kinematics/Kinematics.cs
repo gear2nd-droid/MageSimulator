@@ -18,6 +18,7 @@ namespace MageInterface.Kinematics
     public double HoppingDegreeA;
     public double HoppingDegreeB;
     public double HoppingDegreeC;
+    public string Type;
     abstract public void InverseKinematics(double[] tar_pos, double[] tar_ijk,
       double[] pre_gcd, out double[] next);
     abstract public void InverseKinematicsWithABC(double[] tar_pos, double tar_a, double tar_b, double tar_c,

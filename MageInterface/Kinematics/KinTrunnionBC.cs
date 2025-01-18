@@ -14,10 +14,26 @@ namespace MageInterface.Kinematics
       next = new double[6];
       double pre_tilt = pre_gcd[4];
       double pre_rot = pre_gcd[5];
+      double tilt;
+      switch(this.Type)
+      {
+        case "Normal":
+          tilt = -Math.Acos(tar_ijk[2]);
+          break;
+        case "For5x":
+          tilt = -Math.Acos(tar_ijk[2]);
+          break;
+        case "For4x":
+          tilt = -Math.Atan2(tar_ijk[0], tar_ijk[2]);
+          break;
+        default:
+          tilt = -Math.Acos(tar_ijk[2]);
+          break;
+      }
       // OLD
       //double tilt = -Math.Acos(tar_ijk[2]);
       // NEW
-      double tilt = -Math.Atan2(tar_ijk[0], tar_ijk[2]);
+      //double tilt = -Math.Atan2(tar_ijk[0], tar_ijk[2]);
       double rot;
       if (tar_ijk[0] == 0.0)
       {
@@ -44,7 +60,22 @@ namespace MageInterface.Kinematics
         // OLD
         //rot = -Math.Atan2(tar_ijk[1], tar_ijk[0]);
         // NEW
-        rot = -Math.Asin(tar_ijk[1]);
+        //rot = -Math.Asin(tar_ijk[1]);
+        switch(this.Type)
+        {
+          case "Normal":
+            rot = -Math.Atan2(tar_ijk[1], tar_ijk[0]);
+            break;
+          case "For5x":
+            rot = -Math.Atan2(tar_ijk[1], tar_ijk[0]);
+            break;
+          case "For4x":
+            rot = -Math.Asin(tar_ijk[1]);
+            break;
+          default:
+            rot = -Math.Atan2(tar_ijk[1], tar_ijk[0]);
+            break;
+        }
       }
       // rot
       int buf_base = (int)Math.Ceiling(pre_rot / Math.PI / 2.0);
@@ -74,9 +105,9 @@ namespace MageInterface.Kinematics
       double bx2 = Math.Cos(-tilt) * bx1 - Math.Sin(-tilt) * bz1;
       double by2 = by1;
       double bz2 = Math.Sin(-tilt) * bx1 + Math.Cos(-tilt) * bz1;
-      next[0] = bx2;
-      next[1] = by2;
-      next[2] = bz2;
+      next[0] = bx2 + this.OriginX;
+      next[1] = by2 + this.OriginY;
+      next[2] = bz2 + this.OriginZ;
       next[3] = 0.0;
       next[4] = tilt;
       next[5] = rot;
@@ -117,9 +148,9 @@ namespace MageInterface.Kinematics
       double bx2 = Math.Cos(-tilt) * bx1 - Math.Sin(-tilt) * bz1;
       double by2 = by1;
       double bz2 = Math.Sin(-tilt) * bx1 + Math.Cos(-tilt) * bz1;
-      next[0] = bx2;
-      next[1] = by2;
-      next[2] = bz2;
+      next[0] = bx2 + this.OriginX;
+      next[1] = by2 + this.OriginY;
+      next[2] = bz2 + this.OriginZ;
       next[3] = 0.0;
       next[4] = tilt;
       next[5] = rot;

@@ -511,9 +511,38 @@ namespace MageInterface
         this.kin.OriginY = double.Parse(xmlChanger["OriginY"].InnerText);
         this.kin.OriginZ = double.Parse(xmlChanger["OriginZ"].InnerText);
         this.kin.HoppingDistance = double.Parse(xmlChanger["HoppingDistance"].InnerText);
-        this.kin.HoppingDegreeA = double.Parse(xmlChanger["HoppingDegreeA"].InnerText);
-        this.kin.HoppingDegreeB = double.Parse(xmlChanger["HoppingDegreeB"].InnerText);
-        this.kin.HoppingDegreeC = double.Parse(xmlChanger["HoppingDegreeC"].InnerText);
+        if(xmlChanger["HoppingDegreeA"] == null)
+        {
+          this.kin.HoppingDegreeA = 2.0;
+        }
+        else
+        {
+          this.kin.HoppingDegreeA = double.Parse(xmlChanger["HoppingDegreeA"].InnerText);
+        }
+        if(xmlChanger["HoppingDegreeB"] == null)
+        {
+          this.kin.HoppingDegreeB = 2.0;
+        }
+        else
+        {
+          this.kin.HoppingDegreeB = double.Parse(xmlChanger["HoppingDegreeB"].InnerText);
+        }
+        if(xmlChanger["HoppingDegreeC"] == null)
+        {
+          this.kin.HoppingDegreeC = 2.0;
+        }
+        else
+        {
+          this.kin.HoppingDegreeC = double.Parse(xmlChanger["HoppingDegreeC"].InnerText);
+        }
+        if(xmlChanger["Type"] == null)
+        {
+          this.kin.Type = "Normal";
+        }
+        else
+        {
+          this.kin.Type = xmlChanger["Type"].InnerText;
+        }
       }
     }
   }
