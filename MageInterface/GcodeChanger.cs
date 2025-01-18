@@ -163,44 +163,66 @@ namespace MageInterface
           this.kin.InverseKinematicsWithABC(rp_xyz, vn_gcd[3], vn_gcd[4], vn_gcd[5], vp_gcd, out buf_gcd);
           if(block == 0 && layer == 0)
           {
-            gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
-              this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
             switch(rnm)
             {
 	            case 11://OuterWallMiddle = 11,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
                 break;
 	            case 12://OuterWallStart = 12,
-                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
+                gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
+                //add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.wallFirst, out pe);
                 break;
 	            case 13://OuterWallEnd = 13,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
                 break;
 	            case 21://InnerWallMiddle = 21,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
                 break;
 	            case 22://InnerWallStart = 22,
-                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
+                gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
+                //add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.wallFirst, out pe);
                 break;
 	            case 23://InnerWallEnd = 23,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallFirst, out pe);
                 break;
 	            case 31://InfillMiddle = 31,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillFirst, out pe);
                 break;
 	            case 32://InfillStart = 32,
-                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillFirst, out pe);
+                gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
+                //add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.infillFirst, out pe);
                 break;
 	            case 33://InfillEnd = 33,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillFirst, out pe);
                 break;
 	            case 41://SupportMiddle = 41,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportFirst, out pe);
                 break;
 	            case 42://SupportStart = 42,
-                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportFirst, out pe);
+                gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
+                //add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.supportFirst, out pe);
                 break;
 	            case 43://SupportEnd = 43,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveFirst, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportFirst, out pe);
                 break;
 	            case 51://Saving = 51,
@@ -214,44 +236,66 @@ namespace MageInterface
           }
           else
           {
-            gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
-              this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
             switch(rnm)
             {
 	            case 11://OuterWallMiddle = 11,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
                 break;
 	            case 12://OuterWallStart = 12,
-                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
+                gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
+                //add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.wallSecond, out pe);
                 break;
 	            case 13://OuterWallEnd = 13,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
                 break;
 	            case 21://InnerWallMiddle = 21,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
                 break;
 	            case 22://InnerWallStart = 22,
-                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
+                gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
+                //add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.wallSecond, out pe);
                 break;
 	            case 23://InnerWallEnd = 23,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.wallSecond, out pe);
                 break;
 	            case 31://InfillMiddle = 31,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillSecond, out pe);
                 break;
 	            case 32://InfillStart = 32,
-                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillSecond, out pe);
+                gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
+                //add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.infillSecond, out pe);
                 break;
 	            case 33://InfillEnd = 33,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.infillSecond, out pe);
                 break;
 	            case 41://SupportMiddle = 41,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportSecond, out pe);
                 break;
 	            case 42://SupportStart = 42,
-                add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportSecond, out pe);
+                gcd = this.kin.OutputGcodeHopping(vn_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
+                //add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, 0.0, this.supportSecond, out pe);
                 break;
 	            case 43://SupportEnd = 43,
+                gcd = this.kin.OutputGcodeHopping(buf_gcd, pe, 
+                  this.retLength, this.retPull, this.retPush, this.zHop, this.moveSecond, vp_gcd);
                 add_gcd = this.kin.OutputGcodeNormal(vn_gcd, pe, edelta, this.supportSecond, out pe);
                 break;
 	            case 51://Saving = 51,
