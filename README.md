@@ -43,7 +43,25 @@ MAGE Simulatorは、コマンドラインアプリです。
 - OriginX:原点のX座標
 - OriginY:原点のY座標
 - OriginZ:原点のZ座標
-- HoppingDistance:移動量がこの値よりも大きいとZホップする
+- HoppingDistance:XYZの移動量がこの値よりも大きいとZホップする
+- HoppingDegreeA:Aの移動量がこの値よりも大きいとZホップする
+- HoppingDegreeB:Bの移動量がこの値よりも大きいとZホップする
+- HoppingDegreeC:Cの移動量がこの値よりも大きいとZホップする
+- Type:運動学の計算方法の種類を選択する
+
+#### CoreXY-BCのType
+- For5x:5軸での運動学を正確に解いているもの。XYZBC軸全てが動作する際はこのモードを選択しないと、ノズルの法線方向が正確に制御されない。ただし、Zホップの回数が増えてしまい造形時間がかかり、また姿勢の正負が入れ替わる箇所で造形が途切れてしまう欠点がある。
+- For4x:4軸での運動学を解いているもの。XYZB軸の動作のみを考慮しており、C軸が制御対象に加わると間違った運動学の解となり、ノズルの法線方向が正確に制御されなくなる。利点として、B軸が正負両方ともに値をとれるようになり、連続した造形が可能であり、Zホップの回数が減る利点がある。
+- Normal:For5xと同様。
+
+#### CoreXYのType
+- Normal:3軸なため、Normalしかない。
+
+#### BedSlingerYのType
+- Normal:3軸なため、Normalしかない。
+
+#### DeltaのType
+- Normal:3軸なため、Normalしかない。
 
 ### Headsタグ
 ノズルを含めたヘッドの構成要素を定義します。
