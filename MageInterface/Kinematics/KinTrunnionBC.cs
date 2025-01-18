@@ -14,11 +14,10 @@ namespace MageInterface.Kinematics
       next = new double[6];
       double pre_tilt = pre_gcd[4];
       double pre_rot = pre_gcd[5];
-      double tilt = -Math.Acos(tar_ijk[2]);
-      //if(Math.Abs(tilt - pre_tilt) > Math.Abs(pre_tilt) && is_filter_enable)
-      //{
-      //  tilt = pre_tilt;
-      //}
+      // OLD
+      //double tilt = -Math.Acos(tar_ijk[2]);
+      // NEW
+      double tilt = -Math.Atan2(tar_ijk[0], tar_ijk[2]);
       double rot;
       if (tar_ijk[0] == 0.0)
       {
@@ -42,7 +41,10 @@ namespace MageInterface.Kinematics
       }
       else
       {
-        rot = -Math.Atan2(tar_ijk[1], tar_ijk[0]);
+        // OLD
+        //rot = -Math.Atan2(tar_ijk[1], tar_ijk[0]);
+        // NEW
+        rot = -Math.Asin(tar_ijk[1]);
       }
       // rot
       int buf_base = (int)Math.Ceiling(pre_rot / Math.PI / 2.0);
