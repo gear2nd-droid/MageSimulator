@@ -2,6 +2,7 @@
 
 # Introduction
 Software suite for operating a multi-axis 3D printer with [MAGE Slicer](https://github.com/gear2nd-droid/MageSlicer).
+[![Introduction to MAGE Slicer](https://github.com/user-attachments/assets/6f9fd819-9652-4816-a5ee-a30d5d493a75)](https://youtu.be/kq60ltlDD3I)
 
 ## MAGE Simulator
 MAGE Simulator is software that reads G-code and information about the target 3D printer and simulates its operation.
@@ -160,6 +161,7 @@ CUDA is required.
 
 # はじめに
 [MAGE Slicer](https://github.com/gear2nd-droid/MageSlicer)と共に用いて多軸3Dプリンタを動作させるためのソフトウェア群です。
+[![Introduction to MAGE Slicer](https://github.com/user-attachments/assets/6f9fd819-9652-4816-a5ee-a30d5d493a75)](https://youtu.be/kq60ltlDD3I)
 
 ## MAGE Simulator
 MAGE Simulatorは、Gコードと対象とする3Dプリンタに関する情報を読み込み、動作をシミュレートするソフトウェアです。
