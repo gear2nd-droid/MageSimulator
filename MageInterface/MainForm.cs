@@ -66,38 +66,38 @@ namespace MageInterface
       this.numericBed.Increment = (decimal)5.0;
       this.numericBed.DecimalPlaces = 0;
 
-      this.numericWallFirst.Maximum = (decimal)25.0;
+      this.numericWallFirst.Maximum = (decimal)50.0;
       this.numericWallFirst.Minimum = (decimal)0.5;
       this.numericWallFirst.Increment = (decimal)0.5;
       this.numericWallFirst.DecimalPlaces = 1;
-      this.numericWallSecond.Maximum = (decimal)25.0;
+      this.numericWallSecond.Maximum = (decimal)50.0;
       this.numericWallSecond.Minimum = (decimal)0.5;
       this.numericWallSecond.Increment = (decimal)0.5;
       this.numericWallSecond.DecimalPlaces = 1;
 
-      this.numericInfillFirst.Maximum = (decimal)25.0;
+      this.numericInfillFirst.Maximum = (decimal)50.0;
       this.numericInfillFirst.Minimum = (decimal)0.5;
       this.numericInfillFirst.Increment = (decimal)0.5;
       this.numericInfillFirst.DecimalPlaces = 1;
-      this.numericInfillSecond.Maximum = (decimal)25.0;
+      this.numericInfillSecond.Maximum = (decimal)50.0;
       this.numericInfillSecond.Minimum = (decimal)0.5;
       this.numericInfillSecond.Increment = (decimal)0.5;
       this.numericInfillSecond.DecimalPlaces = 1;
 
-      this.numericSupportFirst.Maximum = (decimal)25.0;
+      this.numericSupportFirst.Maximum = (decimal)50.0;
       this.numericSupportFirst.Minimum = (decimal)0.5;
       this.numericSupportFirst.Increment = (decimal)0.5;
       this.numericSupportFirst.DecimalPlaces = 1;
-      this.numericSupportSecond.Maximum = (decimal)25.0;
+      this.numericSupportSecond.Maximum = (decimal)50.0;
       this.numericSupportSecond.Minimum = (decimal)0.5;
       this.numericSupportSecond.Increment = (decimal)0.5;
       this.numericSupportSecond.DecimalPlaces = 1;
 
-      this.numericMoveFirst.Maximum = (decimal)50.0;
+      this.numericMoveFirst.Maximum = (decimal)100.0;
       this.numericMoveFirst.Minimum = (decimal)0.5;
       this.numericMoveFirst.Increment = (decimal)0.5;
       this.numericMoveFirst.DecimalPlaces = 1;
-      this.numericMoveSecond.Maximum = (decimal)50.0;
+      this.numericMoveSecond.Maximum = (decimal)100.0;
       this.numericMoveSecond.Minimum = (decimal)0.5;
       this.numericMoveSecond.Increment = (decimal)0.5;
       this.numericMoveSecond.DecimalPlaces = 1;
