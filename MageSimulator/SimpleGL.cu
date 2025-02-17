@@ -80,8 +80,8 @@ void motion(int x, int y)
 		if (modifiers & GLUT_ACTIVE_SHIFT) {
 			const float sensitivity = 0.5f;
 			cameraParam.targetPosZ += deltaY * sensitivity;
-			if (cameraParam.cameraDistance < -500.0f) cameraParam.cameraDistance = -500.0f;
-			if (cameraParam.cameraDistance > 500.0f) cameraParam.cameraDistance = 500.0f;
+			if (cameraParam.targetPosZ < -500.0f) cameraParam.targetPosZ = -500.0f;
+			if (cameraParam.targetPosZ > 500.0f) cameraParam.targetPosZ = 500.0f;
 		}
 		else {
 			const float sensitivity = 0.5f;
