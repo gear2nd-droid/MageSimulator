@@ -284,16 +284,18 @@ cudaError_t createLargeArrays(std::vector<Mesh> inMesh, std::vector<Ray> inRay, 
   Ray* dev_mat_ray;
   
   // input
-  Mesh* mesh = new Mesh[inMesh.size()];
-  for (int i = 0; i < inMesh.size(); i++)
-  {
-    mesh[i] = inMesh[i];
-  }
-  Ray* ray = new Ray[inRay.size()];
-  for (int i = 0; i < inRay.size(); i++)
-  {
-    ray[i] = inRay[i];
-  }
+  //Mesh* mesh = new Mesh[inMesh.size()];
+  Mesh* mesh = inMesh.data();
+  //for (int i = 0; i < inMesh.size(); i++)
+  //{
+  //  mesh[i] = inMesh[i];
+  //}
+  //Ray* ray = new Ray[inRay.size()];
+  Ray* ray = inRay.data();
+  //for (int i = 0; i < inRay.size(); i++)
+  //{
+  //  ray[i] = inRay[i];
+  //}
 
   // cuda
   cudaStatus = cudaMalloc((void**)&dev_mesh, inMesh.size() * sizeof(Mesh));
@@ -371,8 +373,8 @@ cudaError_t createLargeArrays(std::vector<Mesh> inMesh, std::vector<Ray> inRay, 
   }
   cudaStreamDestroy(stream);
 
-  delete[] mesh;
-  delete[] ray;
+  //delete[] mesh;
+  //delete[] ray;
 Error1:
   cudaFree(dev_mat_ray);
 Error2:

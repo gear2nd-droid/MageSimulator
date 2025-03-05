@@ -146,6 +146,10 @@ namespace MageInterface
 
         // output gcode
         string[] gcd = {"" };
+        double bd = (rn_xyz[0] - rp_xyz[0]) * (rn_xyz[0] - rp_xyz[0]) 
+          + (rn_xyz[1] - rp_xyz[1]) * (rn_xyz[1] - rp_xyz[1])
+          + (rn_xyz[2] - rp_xyz[2]) * (rn_xyz[2] - rp_xyz[2]);
+        bd = Math.Sqrt(bd);
         if(
           //Math.Abs(vn_gcd[3] - vp_gcd[3]) > Math.Abs(vp_gcd[3]) ||
           //Math.Abs(vn_gcd[4] - vp_gcd[4]) > Math.Abs(vp_gcd[4]) ||
@@ -153,9 +157,10 @@ namespace MageInterface
           Math.Abs(vn_gcd[3] - vp_gcd[3]) > this.kin.HoppingDegreeA / 180.0 * Math.PI ||
           Math.Abs(vn_gcd[4] - vp_gcd[4]) > this.kin.HoppingDegreeB / 180.0 * Math.PI ||
           Math.Abs(vn_gcd[5] - vp_gcd[5]) > this.kin.HoppingDegreeC / 180.0 * Math.PI ||
-          Math.Abs(rn_xyz[0] - rp_xyz[0]) > this.kin.HoppingDistance ||
-          Math.Abs(rn_xyz[1] - rp_xyz[1]) > this.kin.HoppingDistance ||
-          Math.Abs(rn_xyz[2] - rp_xyz[2]) > this.kin.HoppingDistance 
+          bd > this.kin.HoppingDistance
+          //Math.Abs(rn_xyz[0] - rp_xyz[0]) > this.kin.HoppingDistance ||
+          //Math.Abs(rn_xyz[1] - rp_xyz[1]) > this.kin.HoppingDistance ||
+          //Math.Abs(rn_xyz[2] - rp_xyz[2]) > this.kin.HoppingDistance 
           )
         {
           double[] buf_gcd;

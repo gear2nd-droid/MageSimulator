@@ -40,15 +40,30 @@ std::vector<CollisionObject*> arrBeds;
 bool enableCheckCollsion = false;
 bool enableMultiThread = false;
 std::vector<CollisionSet>* resultCol;
+// memory cache
+Mesh** bufLargeMesh;
+Ray** bufLargeRay;
+CollisionSet** largeCol;
+Mesh** bufSmallMesh;
+Ray** bufSmallRay;
+CollisionSet** smallCol;
+#define SMALL_MESH_SIZE 5000000 
+
+//file
+int gcodeCnt;
+
 
 GLuint pbo;
 cudaGraphicsResource* dev_resource;
 
 std::vector<CollisionSet> checkTime(int time, bool isdraw)
 {
-	clock_t time1 = clock();
+	int thNum = omp_get_thread_num();
+
+	auto timeStart = std::chrono::high_resolution_clock::now();
 	std::vector<CollisionSet> retcol = std::vector<CollisionSet>();
 	// large
+	auto t1 = std::chrono::high_resolution_clock::now();
 	std::vector<Ray> largeRay = std::vector<Ray>();
 	std::vector<std::vector<Mesh>> bodyMeshBuffer = std::vector<std::vector<Mesh>>();
 	bool** targetGroup = new bool* [arrBodies.size()];
@@ -92,7 +107,7 @@ std::vector<CollisionSet> checkTime(int time, bool isdraw)
 			largeRay.push_back(buf2);
 		}
 	}
-	clock_t time7 = clock();
+	auto t2 = std::chrono::high_resolution_clock::now();
 	std::vector<Mesh> largeTargetMesh = std::vector<Mesh>();
 	for (int j = 0; j < largeMesh.size(); j++)
 	{
@@ -101,7 +116,7 @@ std::vector<CollisionSet> checkTime(int time, bool isdraw)
 			largeTargetMesh.push_back(largeMesh[j][k]);
 		}
 	}
-	//std::vector<Mesh>* bedMeshBuffer = new std::vector<Mesh>[largeRay.size()];
+	auto t3 = std::chrono::high_resolution_clock::now();
 	std::vector<Mesh>* bedMeshBuffer = new std::vector<Mesh>[arrBeds.size()];
 	for (int j = 0; j < arrBeds.size(); j++)
 	{
@@ -113,32 +128,37 @@ std::vector<CollisionSet> checkTime(int time, bool isdraw)
 			largeTargetMesh.push_back(bboxMesh[k]);
 		}
 	}
-	Mesh* bufLargeMesh;
-	bufLargeMesh = (Mesh*)malloc(sizeof(Mesh) * largeTargetMesh.size() * largeRay.size());
-	Ray* bufLargeRay;
-	bufLargeRay = (Ray*)malloc(sizeof(Ray) * largeTargetMesh.size() * largeRay.size());
-	clock_t time9 = clock();
-	createLargeArrays(largeTargetMesh, largeRay, bufLargeMesh, bufLargeRay);
-
-	clock_t time2 = clock();
-	CollisionSet* largeCol = (CollisionSet*)malloc(sizeof(CollisionSet) * largeTargetMesh.size() * largeRay.size());
-	clock_t time3 = clock();
-	checkCollisions(largeTargetMesh.size() * largeRay.size(), bufLargeMesh, bufLargeRay, largeCol);
-	clock_t time8 = clock();
+	auto t4 = std::chrono::high_resolution_clock::now();
+	//createLargeArrays(largeTargetMesh, largeRay, bufLargeMesh[thNum], bufLargeRay[thNum]);
+	for (int i = 0; i < largeRay.size(); i++)
+	{
+		for (int j = 0; j < largeTargetMesh.size(); j++)
+		{
+			int idx = i * largeTargetMesh.size() + j;
+			bufLargeMesh[thNum][idx] = largeTargetMesh[j];
+			bufLargeRay[thNum][idx] = largeRay[i];
+		}
+	}
+	auto t5 = std::chrono::high_resolution_clock::now();
+	checkCollisions(largeTargetMesh.size() * largeRay.size(), bufLargeMesh[thNum], bufLargeRay[thNum], largeCol[thNum]);
+	auto t6 = std::chrono::high_resolution_clock::now();
 	std::vector<std::pair<int, int>> pairBodyGroup = std::vector<std::pair<int, int>>();
 	for (int i = 0; i < largeTargetMesh.size() * largeRay.size(); i++)
 	{
-		if (largeCol[i].colFlag)
+		if (largeCol[thNum][i].colFlag)
 		{
 			std::pair<int, int > pair = std::pair<int, int>();
-			pair.first = largeCol[i].rayId;
-			pair.second = largeCol[i].meshId;
+			pair.first = largeCol[thNum][i].rayId;
+			pair.second = largeCol[thNum][i].meshId;
 			pairBodyGroup.push_back(pair);
 		}
 	}
+	auto t7 = std::chrono::high_resolution_clock::now();
 	std::sort(pairBodyGroup.begin(), pairBodyGroup.end());
 	auto last = std::unique(pairBodyGroup.begin(), pairBodyGroup.end());
 	pairBodyGroup.erase(last, pairBodyGroup.end());
+	auto t8 = std::chrono::high_resolution_clock::now();
+	auto timeLargeEnd = std::chrono::high_resolution_clock::now();
 	// small
 	std::vector<Mesh> smallMesh = std::vector<Mesh>();
 	std::vector<Ray> smallRay = std::vector<Ray>();
@@ -201,49 +221,53 @@ std::vector<CollisionSet> checkTime(int time, bool isdraw)
 			}
 		}
 	}
-	Mesh* bufSmallMesh;
-	bufSmallMesh = (Mesh*)malloc(sizeof(Mesh) * smallMesh.size());
-	Ray* bufSmallRay;
-	bufSmallRay = (Ray*)malloc(sizeof(Ray) * smallMesh.size());
 	for (int i = 0; i < smallMesh.size(); i++)
 	{
-		bufSmallMesh[i] = smallMesh[i];
-		bufSmallRay[i] = smallRay[i];
+		bufSmallMesh[thNum][i] = smallMesh[i];
+		bufSmallRay[thNum][i] = smallRay[i];
 	}
-	clock_t time4 = clock();
-	CollisionSet* smallCol = (CollisionSet*)malloc(sizeof(CollisionSet) * smallMesh.size());
-	clock_t time5 = clock();
-	checkCollisions(smallMesh.size(), bufSmallMesh, bufSmallRay, smallCol);
+	checkCollisions(smallMesh.size(), bufSmallMesh[thNum], bufSmallRay[thNum], smallCol[thNum]);
 	for (int i = 0; i < smallMesh.size(); i++)
 	{
-		if (smallCol[i].colFlag)
+		if (smallCol[thNum][i].colFlag)
 		{
-			retcol.push_back(smallCol[i]);
+			retcol.push_back(smallCol[thNum][i]);
 		}
 	}
+	auto timeSmallEnd = std::chrono::high_resolution_clock::now();
 
+	int smallMeshSize = smallMesh.size();
 	// memory clear
-	free(bufLargeMesh);
-	free(bufLargeRay);
-	free(largeCol);
 	largeRay.clear();
 	pairBodyGroup.clear();
 	smallMesh.clear();
 	smallRay.clear();
 	bodyMeshBuffer.clear();
-	free(bufSmallMesh);
-	free(bufSmallRay);
-	free(smallCol);
-	clock_t time6 = clock();
-	float time17 = static_cast<float>(time7 - time1) / CLOCKS_PER_SEC * 1000.0;
-	float time79 = static_cast<float>(time9 - time7) / CLOCKS_PER_SEC * 1000.0;
-	float time92 = static_cast<float>(time2 - time9) / CLOCKS_PER_SEC * 1000.0;
-	float time23 = static_cast<float>(time3 - time2) / CLOCKS_PER_SEC * 1000.0;
-	float time38 = static_cast<float>(time8 - time3) / CLOCKS_PER_SEC * 1000.0;
-	float time84 = static_cast<float>(time4 - time8) / CLOCKS_PER_SEC * 1000.0;
-	float time45 = static_cast<float>(time5 - time4) / CLOCKS_PER_SEC * 1000.0;
-	float time56 = static_cast<float>(time6 - time5) / CLOCKS_PER_SEC * 1000.0;
-	//printf("%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf\n", time17, time79, time92, time23, time38, time84, time45, time56);
+	auto timeMemoryClear = std::chrono::high_resolution_clock::now();
+
+	//file check size
+	//auto timeEnd = std::chrono::high_resolution_clock::now();
+	//auto timeStart2End = std::chrono::duration_cast<std::chrono::microseconds>(timeEnd - timeStart);
+	//auto timeStart2LargeEnd = std::chrono::duration_cast<std::chrono::microseconds>(timeLargeEnd - timeStart);
+	//auto timeLargeEnd2SmallEnd = std::chrono::duration_cast<std::chrono::microseconds>(timeSmallEnd - timeLargeEnd);
+	//auto timeSmallEnd2MemoryClear = std::chrono::duration_cast<std::chrono::microseconds>(timeMemoryClear - timeSmallEnd);
+	//auto t12 = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
+	//auto t23 = std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2);
+	//auto t34 = std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3);
+	//auto t45 = std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4);
+	//auto t56 = std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5);
+	//auto t67 = std::chrono::duration_cast<std::chrono::microseconds>(t7 - t6);
+	//auto t78 = std::chrono::duration_cast<std::chrono::microseconds>(t8 - t7);
+	//std::ostringstream filename;
+	//filename << "C:\\Develop\\Slicer\\slicer_models\\length_check" << thNum << ".csv";
+	//std::fstream file(filename.str(), std::ios::app);
+	//file << gcodeCnt << "," << toolpathFullCnt << "," << time << "," << timeStart2End.count() << ","
+	//	<< smallMeshSize << "," << timeStart2LargeEnd.count() << ","
+	//	<< timeLargeEnd2SmallEnd.count() << "," << timeSmallEnd2MemoryClear.count() << ","
+	//	<< t12.count() << "," << t23.count() << "," << t34.count() << "," << t45.count() << ","
+	//	<< t56.count() << "," << t67.count() << "," << t78.count() 
+	//	<< std::endl;
+	//file.close();
 
 	return retcol;
 }
@@ -272,7 +296,10 @@ void sampling()
 				}
 				else
 				{
-					drawPrintItem_move(print[i], 1.0, 1.0, 1.0);
+					if (i > timeCnt - 1000)
+					{
+						drawPrintItem_move(print[i], 1.0, 1.0, 1.0);
+					}
 				}
 			}
 			clock_t end_gl = clock();
@@ -346,7 +373,10 @@ void sampling()
 			}
 			else
 			{
-				drawPrintItem_move(print[i], 1.0, 1.0, 1.0);
+				if (i > timeCnt - 1000)
+				{
+					drawPrintItem_move(print[i], 1.0, 1.0, 1.0);
+				}
 			}
 		}
 
@@ -392,7 +422,7 @@ int main(int argc, char** argv)
 	tinyxml2::XMLError err = doc.LoadFile(machinefile);
 	tinyxml2::XMLElement* xmlRoot = doc.FirstChildElement("Machine");
 	tinyxml2::XMLElement* xmlKinematics = xmlRoot->FirstChildElement("Kinematics");
-	printf("Kinematics:%s", xmlKinematics->GetText());
+	printf("Kinematics:%s\n", xmlKinematics->GetText());
 	if (strcmp(xmlKinematics->GetText(), "CoreXY-BC") == 0)
 	{
 		kin = new CoreXYBC();
@@ -503,7 +533,8 @@ int main(int argc, char** argv)
 
 	// read gcode
 	std::vector<GcodeItem> bufgcode = readGcode(filepath);
-	int gcodeCnt = bufgcode.size();
+	//file int gcodeCnt = bufgcode.size();
+	gcodeCnt = bufgcode.size();
 	std::vector<PathItem> bufpath = convertGcode2Path(kin, bufgcode);
 
   // read csv
@@ -547,7 +578,36 @@ int main(int argc, char** argv)
 	largeRay = std::vector<Ray*>();
 	largeMesh = std::vector<Mesh*>();
 	constructBVH(bufPrint, &largePrint, &largeRay, &largeMesh);
-
+	
+	// memory cache
+	int largeTargeMeshSize = largeMesh.size() * 12 + arrBeds.size() * 12;
+	int largeRaySize = 0;
+	for (int m = 0; m < arrBodies.size(); m++)
+	{
+		largeRaySize += arrBodies[m]->move(print[0], kin, false).size() * 3;
+	}
+	int thNum = omp_get_max_threads();
+	if (!enableMultiThread)
+	{
+		thNum = 1;
+	}
+	bufLargeMesh = (Mesh**)malloc(sizeof(Mesh*) * thNum);
+	bufLargeRay = (Ray**)malloc(sizeof(Ray*) * thNum);
+	largeCol = (CollisionSet**)malloc(sizeof(CollisionSet*) * thNum);
+	bufSmallMesh = (Mesh**)malloc(sizeof(Mesh*) * thNum);
+	bufSmallRay = (Ray**)malloc(sizeof(Ray*) * thNum);
+	smallCol = (CollisionSet**)malloc(sizeof(CollisionSet*) * thNum);
+	for (int i = 0; i < thNum; i++)
+	{
+		bufLargeMesh[i] = (Mesh*)malloc(sizeof(Mesh) * largeTargeMeshSize * largeRaySize);
+		bufLargeRay[i] = (Ray*)malloc(sizeof(Ray) * largeTargeMeshSize * largeRaySize);
+		largeCol[i] = (CollisionSet*)malloc(sizeof(CollisionSet) * largeTargeMeshSize * largeRaySize);
+		bufSmallMesh[i] = (Mesh*)malloc(sizeof(Mesh) * SMALL_MESH_SIZE);
+		bufSmallRay[i] = (Ray*)malloc(sizeof(Ray) * SMALL_MESH_SIZE);
+		smallCol[i] = (CollisionSet*)malloc(sizeof(CollisionSet) * SMALL_MESH_SIZE);
+	}
+	
+	// scan
 	if (enableMultiThread)
 	{
 		// time split

@@ -326,7 +326,9 @@ std::vector<Mesh> CollisionBox::move(PrintItem item, Kinematics* kin, bool isdra
   float deltaPos[3];
   float delta[3];
 
+  //auto t1 = std::chrono::high_resolution_clock::now();
   kin->GetRotationMatrix(item.edMoveVal[3], item.edMoveVal[4], item.edMoveVal[5], mat);
+  //auto t2 = std::chrono::high_resolution_clock::now();
   float** vertMove = new float* [8];
   for (int i = 0; i < 8; i++)
   {
@@ -403,6 +405,10 @@ std::vector<Mesh> CollisionBox::move(PrintItem item, Kinematics* kin, bool isdra
     sub.id = INT_MAX;
     ret.push_back(sub);
   }
+  //auto t3 = std::chrono::high_resolution_clock::now();
+  //auto t12 = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
+  //auto t23 = std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2);
+  //printf("%d,%d\n", t12.count(), t23.count());
 
   // draw openGl myself
   if (isdraw)
